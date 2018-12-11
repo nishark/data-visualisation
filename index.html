@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+	.state{
+		fill: none;
+		stroke: #a9a9a9;
+		stroke-width: 1;
+	}
+	.state:hover{
+		fill-opacity:0.5;
+	}
+	#tooltip {   
+		position: absolute;           
+		text-align: center;
+		padding: 20px;             
+		margin: 10px;
+		font: 12px sans-serif;        
+		background: lightsteelblue;   
+		border: 1px;      
+		border-radius: 2px;           
+		pointer-events: none;         
+	}
+	#tooltip h4{
+		margin:0;
+		font-size:14px;
+	}
+	#tooltip{
+		background:rgba(0,0,0,0.9);
+		border:1px solid grey;
+		border-radius:5px;
+		font-size:12px;
+		width:auto;
+		padding:4px;
+		color:white;
+		opacity:0;
+	}
+	#tooltip table{
+		table-layout:fixed;
+	}
+	#tooltip tr td{
+		padding:0;
+		margin:0;
+	}
+	#tooltip tr td:nth-child(1){
+		width:50px;
+	}
+	#tooltip tr td:nth-child(2){
+		text-align:center;
+	}
+	.topnav {
+    background-color: #4CAF50;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #4CAF50;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
+<body>
+		<div class="topnav">
+				<h1><center>   Tobaccco Consumption across US States</center>        </h1>
+				<h3>             
+					<br><center>Nisha Ravikesavan</center><br><center>ASUID- 1215173596</center></h3>
+			  </div>
+			  <h2><center>The percentage breakdown of type of smokers( Rare smokers, regular and former smokers) per state</center></h2>
+
+<div id="tooltip"></div><!-- div to hold tooltip. -->
+<div class= container>
+<div id=map>
+<svg width="960" height="600" id="statesvg"> <!-- svg to hold the map. -->
+</svg>
+<svg width = 300 height=450 id="chart">
+
+</svg>
+<script src="uStates.js"></script> <!-- creates uStates. -->
+<link rel="stylesheet"  href="legends.css">
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+
+	function tooltipHtml(n, d){	/* function to create html content string in tooltip div. */
+		return "<h4>"+n+"</h4><table>"+
+			"<tr><td>Percentage</td><td>"+(d.percentage)+"% </td></tr>"+
+			
+			"</table>";
+	}
+	
+	var sampleData ={};	/* Sample random data. */	
+	
+			d3.csv('smokingpopulation.csv',function(error,data){
+				data.forEach(function (info){
+					var percentage=0;
+					var everydaysmoke=0,sometimessmoke=0,formersmoke=0;
+				 sampleData[info['State']] ={ percentage:info['Never_smoked'],everydaysmoke:info['Smoke_everyday'], 
+				 sometimessmoke:info['Smoke_some_days'], formersmoke:info['Former_smoker'],
+				 color:d3.interpolate("#ffffcc", "#800026")(info['Never_smoked']/45)};
+
+				}
+				
+			);
+
+	
+		});
+	
+	/* draw states on id #statesvg */
+	var delayInMilliseconds = 5000; //1 second
+
+setTimeout(function() {
+  //your code to be executed after 1 second
+  
+	uStates.draw("#statesvg", sampleData, tooltipHtml);
+
+}, delayInMilliseconds);	
+
+	
+	
+	d3.select(self.frameElement).style("height", "600px"); 
+</script>
+ 
+</div>	
+
+</div>
+<p> The above visualisation shows the tobocco consumption distribution across USA states. The darker states show 
+		larger consumption of tobacco. On hovering over state you get a breakdown of the smoking population. There are three 
+	categories <li><ul>1) Rare smoker - Smoke very few times a week 2) </ul><ul>2) Regular smokers- Smoke everyday</ul> <ul>
+		3) Former Smokers- quit smoking
+	</ul></li>. On hovering over the donut you get the count.Thus it gives an overview of tobacco consumption across USA</p>
+</body>
